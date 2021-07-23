@@ -1,0 +1,130 @@
+<ngx-spinner
+  bdColor= "rgba(151,149,149,0.4)"
+  size="large"
+  color="orange"
+  type="ball-clip-rotate-pulse"
+  [fullScreen]="true"
+>
+  <p style="font-size: 20px; color: black">Booking Order...</p>
+</ngx-spinner>
+
+<div *ngIf="cartData.total === 0" class="text-center my-5">
+  <h4>Giỏ hàng đang trống</h4>
+  <button class="btn btn-primary btn-lg mt-3" routerLink="/">MUA HÀNG</button>
+</div>
+
+<!-- SECTION -->
+<div class="section" *ngIf="cartData.total > 0">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row">
+
+      <div class="col-md-7">
+        <!-- Billing Details -->
+        <div class="billing-details">
+          <div class="section-title">
+            <h3 class="title">THÔNG TIN GIAO HÀNG</h3>
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="first-name" placeholder="First Name">
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="last-name" placeholder="Last Name">
+          </div>
+          <div class="form-group">
+            <input class="input" type="email" name="email" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="address" placeholder="Address">
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="city" placeholder="City">
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="country" placeholder="Country">
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="zip-code" placeholder="ZIP Code">
+          </div>
+          <div class="form-group">
+            <input class="input" type="tel" name="tel" placeholder="Telephone">
+          </div>
+          <div class="form-group">
+            <div class="input-checkbox">
+              <input type="checkbox" id="create-account">
+              <label for="create-account">
+                <span></span>
+                Create Account?
+              </label>
+              <div class="caption">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+                <input class="input" type="password" name="password" placeholder="Enter Your Password">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Billing Details -->
+        <!-- Order notes -->
+        <div class="order-notes">
+          <textarea class="input" placeholder="Ghi chú giao hàng"></textarea>
+        </div>
+        <!-- /Order notes -->
+      </div>
+
+      <!-- Order Details -->
+      <div class="col-md-5 order-details">
+        <div class="section-title text-center">
+          <h3 class="title">Đơn Hàng</h3>
+        </div>
+        <div class="order-summary">
+          <div class="order-col">
+            <div><strong>SẢN PHẨM</strong></div>
+            <div><strong>GIÁ TỔNG</strong></div>
+          </div>
+          <div class="order-products">
+            <div class="order-col" *ngFor="let d of cartData.data">
+              <div>{{d.quantity}}x {{d.product.title}}</div>
+              <div [innerHTML]="d.quantity * d.product.price"></div>
+            </div>
+          </div>
+          <div class="order-col">
+            <div>Shiping</div>
+            <div><strong>FREE</strong></div>
+          </div>
+          <div class="order-col">
+            <div><strong>TỔNG CỘNG</strong></div>
+            <div><strong class="order-total" [innerHTML]="cartData.total"></strong></div>
+          </div>
+        </div>
+        <div class="payment-method">
+          <div class="input-radio">
+            <input type="radio" name="payment" id="payment-1">
+            <label for="payment-1">
+              <span></span>
+              Thanh toán khi giao hàng (COD)
+            </label>
+            <div class="caption">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          <div class="input-radio">
+            <input type="radio" name="payment" id="payment-2">
+            <label for="payment-2">
+              <span></span>
+              Chuyển khoản qua ngân hàng
+            </label>
+            <div class="caption">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="primary-btn order-submit">ĐẶT HÀNG</a>
+      </div>
+      <!-- /Order Details -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /container -->
+</div>
+<!-- /SECTION -->

@@ -1,0 +1,92 @@
+<div class="container">
+  <div *ngIf="cartData.total === 0" class="text-center my-5">
+    <h4>Giỏ hàng đang trống</h4>
+    <button class="btn btn-primary btn-lg mt-3" routerLink="/">MUA HÀNG</button>
+  </div>
+
+  <ng-container *ngIf="cartData.data[0].quantity !== 0">
+    <div class="row">
+      <div class="col my-4">
+        <table class="table">
+          <thead class="table-dark">
+            <tr class="text-center">
+              <th>Hình ảnh</th>
+              <th>Tên</th>
+              <th>Giá</th>
+              <th>Số lượng</th>
+              <th>Tổng Giá</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of cartData.data; let i = index">
+              <td class="d-flex align-items-center justify-content-around">
+                <img
+                  [src]="d.product.image"
+                  alt="{{ d.product.title }}"
+                  height="60"
+                  class="order-1"
+                />
+                <span class="text-danger" style="cursor: pointer"
+                  ><i
+                    class="fa fa-trash"
+                    (click)="cartService.deleteFromCart(i)"
+                  ></i
+                ></span>
+              </td>
+              <td>
+                <p>{{ d.product.title }}</p>
+              </td>
+              <td>
+                <p>{{ d.product.price | currency: "VND" }}</p>
+              </td>
+              <td width="150">
+                <div class="input-number">
+                  <input
+                    type="number"
+                    [value]="d.quantity"
+                    readonly
+                    min="1"
+                  />
+                  <span class="qty-up" (click)="changeQuantity(i, true)"
+                    >+</span
+                  >
+                  <span class="qty-down" (click)="changeQuantity(i, false)"
+                    >-</span
+                  >
+                </div>
+              </td>
+              <td>
+                <p>{{ cartService.calculateSubTotal(i) | currency: "VND" }}</p>
+              </td>
+            </tr>
+            <tr class="border-0">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>TỔNG CỘNG</td>
+              <td>{{ cartData.total | currency: "VND" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-12 d-flex mb-5">
+        <div
+          class="
+            d-flex
+            w-100
+            justify-content-between
+            flex-sm-column flex-md-row
+          "
+        >
+          <button routerLink="/checkout" class="btn btn-danger btn-sm order-1">
+            Thanh toán
+          </button>
+          <button routerLink="/" class="btn btn-success btn-sm order-0">
+            Tiếp tục mua hàng
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

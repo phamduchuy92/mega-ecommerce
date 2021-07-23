@@ -3,8 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
 };
+export const DEBUG_INFO_ENABLED = true;
+export const SERVER_API_URL = '';
+export const BUILD_TIMESTAMP = 0;
 
 /*
  * For easier debugging in development mode, you can import the following file
