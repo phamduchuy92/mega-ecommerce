@@ -7,7 +7,7 @@
     }
   },
   "/services/order-mgmt": {
-    "target": "http://localhost:3000",
+    "target": "http://localhost:3002",
     "secure": false,
     "pathRewrite": {
       "^/services/order-mgmt": ""
