@@ -1,92 +1,151 @@
-<div class="container">
-  <div *ngIf="cartData.total === 0" class="text-center my-5">
-    <h4>Giỏ hàng đang trống</h4>
-    <button class="btn btn-primary btn-lg mt-3" routerLink="/">MUA HÀNG</button>
-  </div>
-
-  <ng-container *ngIf="cartData.data[0].quantity !== 0">
-    <div class="row">
-      <div class="col my-4">
-        <table class="table">
-          <thead class="table-dark">
-            <tr class="text-center">
-              <th>Hình ảnh</th>
-              <th>Tên</th>
-              <th>Giá</th>
-              <th>Số lượng</th>
-              <th>Tổng Giá</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let d of cartData.data; let i = index">
-              <td class="d-flex align-items-center justify-content-around">
-                <img
-                  [src]="d.product.image"
-                  alt="{{ d.product.title }}"
-                  height="60"
-                  class="order-1"
-                />
-                <span class="text-danger" style="cursor: pointer"
-                  ><i
-                    class="fa fa-trash"
-                    (click)="cartService.deleteFromCart(i)"
-                  ></i
-                ></span>
-              </td>
-              <td>
-                <p>{{ d.product.title }}</p>
-              </td>
-              <td>
-                <p>{{ d.product.price | currency: "VND" }}</p>
-              </td>
-              <td width="150">
-                <div class="input-number">
+<div *ngIf="cartData.total === 0" class="text-center my-5">
+  <h4>Giỏ hàng đang trống</h4>
+  <button class="btn btn-primary btn-lg mt-3" routerLink="/">MUA HÀNG</button>
+</div>
+<!-- Start Cart  -->
+<div class="cart-box-main">
+  <div class="container">
+    <div class="row" *ngIf="cartData.data[0].quantity > 0">
+      <div class="col-lg-12">
+        <div class="table-main table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng</th>
+                <th>Xóa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of cartData.data; let i = index">
+                <td class="thumbnail-img">
+                  <a [href]="'product/' + item.product.id">
+                    <img
+                      class="img-fluid"
+                      [src]="getFileSrc(item.product.image)"
+                    />
+                  </a>
+                </td>
+                <td class="name-pr">
+                  <a
+                    [href]="'product/' + item.product.id"
+                    [innerHTML]="item.product.name"
+                  >
+                  </a>
+                </td>
+                <td class="price-pr">
+                  <p
+                    [innerHTML]="item.product.salePrice | mask: 'separator':','"
+                    *ngIf="item.product.onSale"
+                  ></p>
+                  <p
+                    [innerHTML]="item.product.price | mask: 'separator':','"
+                    *ngIf="!item.product.onSale"
+                  ></p>
+                </td>
+                <td class="quantity-box">
                   <input
                     type="number"
-                    [value]="d.quantity"
-                    readonly
+                    size="4"
+                    [value]="item.quantity"
                     min="1"
+                    step="1"
+                    class="c-input-text qty text"
+                    [name]="'quantity' + i"
+                    (change)="updateQuantity(i, $event)"
                   />
-                  <span class="qty-up" (click)="changeQuantity(i, true)"
-                    >+</span
+                </td>
+                <td class="total-pr">
+                  <p
+                    [innerHTML]="
+                      cartService.calculateSubTotal(i) | mask: 'separator':','
+                    "
+                  ></p>
+                </td>
+                <td class="remove-pr">
+                  <button
+                    class="btn btn-danger"
+                    (click)="cartService.deleteFromCart(i)"
                   >
-                  <span class="qty-down" (click)="changeQuantity(i, false)"
-                    >-</span
-                  >
-                </div>
-              </td>
-              <td>
-                <p>{{ cartService.calculateSubTotal(i) | currency: "VND" }}</p>
-              </td>
-            </tr>
-            <tr class="border-0">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>TỔNG CỘNG</td>
-              <td>{{ cartData.total | currency: "VND" }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="col-md-12 d-flex mb-5">
-        <div
-          class="
-            d-flex
-            w-100
-            justify-content-between
-            flex-sm-column flex-md-row
-          "
-        >
-          <button routerLink="/checkout" class="btn btn-danger btn-sm order-1">
-            Thanh toán
-          </button>
-          <button routerLink="/" class="btn btn-success btn-sm order-0">
-            Tiếp tục mua hàng
-          </button>
+                    <fa-icon icon="times"></fa-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-  </ng-container>
+
+    <div class="row my-5">
+      <div class="col-lg-6 col-sm-6">
+        <!-- <div class="coupon-box">
+          <div class="input-group input-group-sm">
+            <input
+              class="form-control"
+              placeholder="Enter your coupon code"
+              aria-label="Coupon code"
+              type="text"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-theme" type="button">Apply Coupon</button>
+            </div>
+          </div>
+        </div> -->
+      </div>
+      <div class="col-lg-6 col-sm-6">
+        <div class="update-box">
+          <button routerLink="/danh-muc-san-pham">Tiếp tục mua hàng</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row my-5">
+      <div class="col-lg-8 col-sm-12"></div>
+      <div class="col-lg-4 col-sm-12">
+        <div class="order-box">
+          <!-- <h3>Order summary</h3>
+          <div class="d-flex">
+            <h4>Sub Total</h4>
+            <div class="ml-auto font-weight-bold">$ 130</div>
+          </div>
+          <div class="d-flex">
+            <h4>Discount</h4>
+            <div class="ml-auto font-weight-bold">$ 40</div>
+          </div>
+          <hr class="my-1" />
+          <div class="d-flex">
+            <h4>Coupon Discount</h4>
+            <div class="ml-auto font-weight-bold">$ 10</div>
+          </div>
+          <div class="d-flex">
+            <h4>Tax</h4>
+            <div class="ml-auto font-weight-bold">$ 2</div>
+          </div>
+          <div class="d-flex">
+            <h4>Shipping Cost</h4>
+            <div class="ml-auto font-weight-bold">Free</div>
+          </div>
+          <hr /> -->
+          <div class="d-flex gr-total">
+            <h5>Tổng tiền</h5>
+            <div
+              class="ml-auto h5"
+              [innerHTML]="cartData.total | mask: 'separator':','"
+            ></div>
+          </div>
+          <hr />
+        </div>
+      </div>
+      <div class="col-12 d-flex shopping-box">
+        <a href="/thanh-toan" class="ml-auto btn hvr-hover text-white">
+          Thanh toán
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
+<!-- End Cart -->

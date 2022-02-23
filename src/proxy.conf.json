@@ -12,5 +12,12 @@
     "pathRewrite": {
       "^/services/order-mgmt": ""
     }
+  },
+  "/services/storage-mgmt": {
+    "target": "http://localhost:3008",
+    "secure": false,
+    "pathRewrite": {
+      "^/services/storage-mgmt": ""
+    }
   }
 }

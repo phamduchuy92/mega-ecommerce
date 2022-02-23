@@ -7,12 +7,12 @@ import { createRequestOption } from '../core/request/request-util';
 @Injectable({
   providedIn: 'root',
 })
-export class ProductService {
+export class ProductCategoryService {
   constructor(private httpClient: HttpClient) {}
 
   find(id: number): Observable<HttpResponse<any>> {
     return this.httpClient.get<any>(
-      SERVER_API_URL + `/services/product-mgmt/api/products/${id}`,
+      SERVER_API_URL + `/services/product-mgmt/api/product-categories/${id}`,
       {
         observe: 'response',
       }
@@ -22,7 +22,7 @@ export class ProductService {
   query(req?: any): Observable<HttpResponse<any>> {
     const options = createRequestOption(req);
     return this.httpClient.get<any>(
-      SERVER_API_URL + `/services/product-mgmt/api/products`,
+      SERVER_API_URL + `/services/product-mgmt/api/product-categories`,
       { params: options, observe: 'response' }
     );
   }

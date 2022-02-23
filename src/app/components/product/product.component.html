@@ -1,113 +1,494 @@
-<!-- BREADCRUMB -->
-<div id="breadcrumb" class="section">
-  <!-- container -->
+
+<!-- Start All Title Box -->
+<div class="all-title-box">
   <div class="container">
-    <!-- row -->
+      <div class="row">
+          <div class="col-lg-12">
+              <h2>Sản Phẩm</h2>
+              <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Trang Chủ</a></li>
+                  <li class="breadcrumb-item"><a href="#">{{ _.get(product, 'productCategory.name') }}</a></li>
+                  <li class="breadcrumb-item active">{{ product.name }}</li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- End All Title Box -->
+
+<!-- Start Shop Detail  -->
+<div class="shop-detail-box-main">
+  <div class="container">
     <div class="row">
-      <div class="col-md-12">
-        <ul class="breadcrumb-tree">
-          <li><a routerLink="/">Trang chủ</a></li>
-        </ul>
+      <div class="col-xl-5 col-lg-5 col-md-6">
+        <ngb-carousel
+          class="single-product-slider"
+        >
+          <ng-template ngbSlide *ngFor="let image of images; index as i">
+            <!-- <div class="picsum-img-wrapper"> -->
+            <img
+              [src]="getFileSrc(image)"
+              style="height: 300px; object-fit: cover"
+            />
+            <!-- </div> -->
+          </ng-template>
+        </ngb-carousel>
+      </div>
+      <div class="col-xl-7 col-lg-7 col-md-6">
+        <div class="single-product-details">
+          <h2 [innerHTML]="product.name"></h2>
+          <h5 *ngIf="product.onSale">
+            <del>{{ product.salePrice | mask: "separator":"," }}đ</del>
+            {{ product.price | mask: "separator":"," }}đ
+          </h5>
+          <h5 *ngIf="!product.onSale">
+            {{ product.price | mask: "separator":"," }}đ
+          </h5>
+          <p></p>
+          <h4>Mô tả</h4>
+          <p [innerHTML]="product.shortDescription"></p>
+          <ul>
+            <li>
+              <div class="form-group quantity-box">
+                <label class="control-label">Số lượng</label>
+                <input
+                  class="form-control"
+                  min="1"
+                  max="20"
+                  type="number"
+                  [(ngModel)]="quantity"
+                />
+              </div>
+            </li>
+          </ul>
+
+          <div class="price-box-bar">
+            <div class="cart-and-bay-btn">
+              <!-- <a class="btn hvr-hover" data-fancybox-close="" href="#"
+                >Buy New</a
+              > -->
+              <button
+                class="btn hvr-hover text-white"
+                data-fancybox-close=""
+                (click)="addToCart(product.id)"
+                [disabled]="product.quantity < 1"
+              >
+                <fa-icon icon="shopping-cart"></fa-icon>
+                {{ product.quantity < 1 ? "HẾT HÀNG" : "CHỌN MUA" }}
+              </button>
+            </div>
+          </div>
+
+          <div class="add-to-btn">
+            <!-- <div class="add-comp">
+              <a class="btn hvr-hover" href="#"
+                ><fa-icon icon="fas fa-heart"></fa-icon> Add to wishlist</a
+              >
+              <a class="btn hvr-hover" href="#"
+                ><fa-icon icon="fas fa-sync-alt"></fa-icon> Add to Compare</a
+              >
+            </div> -->
+            <div class="share-bar">
+              <a class="hvr-hover text-white"
+                ><fa-icon [icon]="['fab', 'facebook']"></fa-icon
+              ></a>
+              <!-- <a class="btn hvr-hover text-white"
+                ><fa-icon [icon]="['fab', 'twitter']"></fa-icon
+              ></a> -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- /row -->
-  </div>
-  <!-- /container -->
-</div>
-<!-- /BREADCRUMB -->
-
-<!-- SECTION -->
-<div class="section">
-  <!-- container -->
-  <div class="container">
-    <!-- row -->
-    <div class="row">
-      <!-- Product main img -->
-      <div class="col-md-5 col-md-push-2">
-        <div id="product-main-img">
-          <ng-template [ngIf]="product && product.images.length === 0">
-            <div class="product-preview">
-              <img [src]="product.image" alt="" />
-            </div>
-          </ng-template>
-          <ng-template [ngIf]="product && product.images.length > 0">
-            <div class="product-preview" *ngFor="let image of product.images">
-              <img [src]="image" alt="" />
-            </div>
-          </ng-template>
+    <!-- <div class="row my-5">
+      <div class="col-lg-12">
+        <div class="title-all text-center">
+          <h1>Featured Products</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit
+            amet lacus enim.
+          </p>
         </div>
-      </div>
-      <!-- /Product main img -->
-
-      <!-- Product thumb imgs -->
-      <div class="col-md-2 col-md-pull-5">
-        <div id="product-imgs">
-          <div class="product-preview" *ngFor="let image of product.images">
-            <img [src]="image" alt="" />
-          </div>
-        </div>
-      </div>
-      <!-- /Product thumb imgs -->
-
-      <!-- Product details -->
-      <div class="col-md-5">
-        <div class="product-details">
-          <h2 class="product-name" [innerHTML]="product.title"></h2>
-          <div>
-            <h3 class="product-price">
-              {{ product.price | currency: "VND" }}
-              <del
-                class="product-old-price"
-                *ngIf="product.sale"
-                [innerHTML]="
-                  _.round((product.price * product.sale) / 100, -3)
-                    | currency: 'VND'
-                "
-              ></del>
-            </h3>
-            <span
-              class="product-available"
-              [innerHTML]="product.quantity > 0 ? 'CÒN HÀNG' : 'HẾT HÀNG'"
-            ></span>
-          </div>
-          <p [innerHTML]="product.description"></p>
-
-          <div class="add-to-cart">
-            <div class="qty-label">
-              Qty
-              <div class="input-number">
-                <input
-                  type="number"
-                  #quantityInput
-                  readonly
-                  [value]="product.quantity > 0 ? 1 : 0"
+        <div class="featured-products-box owl-carousel owl-theme">
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-01.jpg"
+                  class="img-fluid"
+                  alt="Image"
                 />
-                <span class="qty-up" (click)="increase()">+</span>
-                <span class="qty-down" (click)="decrease()">-</span>
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
               </div>
             </div>
-            <button
-              class="btn add-to-cart-btn"
-              [ngClass]="product.quantity < 1 ? 'add-to-cart-btn-disabled' : ''"
-              (click)="addToCart(product.id)"
-              [disabled]="product.quantity < 1"
-            >
-              <i class="fa fa-shopping-cart"></i>
-              {{ product.quantity < 1 ? "HẾT HÀNG" : "CHỌN MUA" }}
-            </button>
           </div>
-
-          <ul class="product-links">
-            <li>Category:</li>
-            <li><a href="#">Headphones</a></li>
-            <li><a href="#">Accessories</a></li>
-          </ul>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-02.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-03.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-04.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-01.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-02.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-03.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="products-single fix">
+              <div class="box-img-hover">
+                <img
+                  src="images/img-pro-04.jpg"
+                  class="img-fluid"
+                  alt="Image"
+                />
+                <div class="mask-icon">
+                  <ul>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="View"
+                        ><fa-icon icon="fas fa-eye"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Compare"
+                        ><fa-icon icon="fas fa-sync-alt"></fa-icon
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Wishlist"
+                        ><fa-icon icon="far fa-heart"></fa-icon
+                      ></a>
+                    </li>
+                  </ul>
+                  <a class="cart" href="#">Add to Cart</a>
+                </div>
+              </div>
+              <div class="why-text">
+                <h4>Lorem ipsum dolor sit amet</h4>
+                <h5>$9.79</h5>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- /Product details -->
-    </div>
-    <!-- /row -->
+    </div> -->
   </div>
-  <!-- /container -->
 </div>
-<!-- /SECTION -->
+<!-- End Cart -->

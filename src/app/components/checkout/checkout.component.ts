@@ -9,11 +9,16 @@ import { CartService } from 'src/app/services/cart.service';
 })
 export class CheckoutComponent implements OnInit {
   cartData!: Cart;
+  customer: any = {};
   constructor(public cartService: CartService) { }
 
   ngOnInit(): void {
     this.cartService.cartData$.subscribe((data: Cart) => {
       this.cartData = data;
     });
+  }
+
+  test(): void {
+    console.log('here', this.customer)
   }
 }

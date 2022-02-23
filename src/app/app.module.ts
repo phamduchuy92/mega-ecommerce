@@ -15,6 +15,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { NgxMaskModule } from 'ngx-mask'
+import { FormsModule } from '@angular/forms';
+import { FilterComponent } from './components/filter/filter.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
@@ -26,6 +34,7 @@ import { ToastrModule } from 'ngx-toastr';
     CheckoutComponent,
     ProductComponent,
     ThankyouComponent,
+    FilterComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -35,8 +44,18 @@ import { ToastrModule } from 'ngx-toastr';
     NgbModule,
     NgxSpinnerModule,
     ToastrModule.forRoot(),
+    FontAwesomeModule,
+    NgxMaskModule.forRoot(),
+    FormsModule,
+    NgxSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(iconLibrary: FaIconLibrary) {
+    iconLibrary.addIconPacks(fas);
+    iconLibrary.addIconPacks(fab);
+    iconLibrary.addIconPacks(far);
+  }
+}

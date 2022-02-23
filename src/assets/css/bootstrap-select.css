@@ -6,9 +6,12 @@ select.selectpicker {
 
 /* line 32, bootstrap-select.scss */
 .bootstrap-select {
-  width: 220px \0;
+  width: 220px;
+  background-color: #ff4800;
+  color: #fff;
   /*IE9 and below*/
 }
+
 /* line 37, bootstrap-select.scss */
 .bootstrap-select.btn-group > .dropdown-toggle {
   height: 100%;

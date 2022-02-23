@@ -2,7 +2,8 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
-
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
 // Toastr
 @import '~ngx-toastr/toastr-bs4-alert';
 

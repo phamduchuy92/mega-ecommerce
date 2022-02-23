@@ -27,26 +27,28 @@ export class CartService {
     private spinner: NgxSpinnerService,
     private toast: ToastrService
   ) {
-    this.cartData$.next({ ...this.cart });
+    this.cartData$.next(this.cart);
     let cart = localStorage.getItem('cart');
     if (cart) {
       let info: Cart = JSON.parse(cart);
       this.cart = info;
-      this.cartData$.next({ ...this.cart });
+      this.cartData$.next(this.cart);
+    } else {
+      localStorage.setItem('cart', JSON.stringify(this.cart));
     }
   }
 
-  addToCart(id: number, quantity?: number) {
+  addToCart(id: number, quantity?: number): void {
     this.productService
       .find(id)
       .pipe(map((res) => res.body || []))
       .subscribe((prod) => {
         // if the cart is empty
-        if (this.cart.data[0].quantity === 0) {
+        if (this.cart.data[0].quantity == 0) {
           this.cart.data[0].product = prod;
           this.cart.data[0].quantity = quantity ? quantity : 1;
           this.toast.success(
-            `${prod.title} đã được thêm vào giỏ.`,
+            `${prod.name} đã được thêm vào giỏ.`,
             'Thông Báo',
             {
               timeOut: 1500,
@@ -78,7 +80,7 @@ export class CartService {
               }
             }
             this.toast.info(
-              `Số lượng ${prod.title} trong giỏ hàng đã được cập nhât.`,
+              `Số lượng ${prod.name} trong giỏ hàng đã được cập nhât.`,
               'Thông Báo',
               {
                 timeOut: 1500,
@@ -102,7 +104,7 @@ export class CartService {
               });
             }
             this.toast.success(
-              `${prod.title} đã được thêm vào giỏ.`,
+              `${prod.name} đã được thêm vào giỏ.`,
               'Thông Báo',
               {
                 timeOut: 1500,
@@ -113,24 +115,26 @@ export class CartService {
             );
           }
         }
+        this.calculateTotal(this.cart);
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+        this.cartData$.next(this.cart);
       });
-    this.calculateTotal(this.cart);
-    localStorage.setItem('cart', JSON.stringify(this.cart));
-    this.cartData$.next({ ...this.cart });
   }
 
-  updateData(index: number, increase: boolean) {
+  updateData(index: number, increase: boolean): void {
     let data = this.cart.data[index];
     if (increase) {
-      data.quantity < data.product.quantity
-        ? data.quantity++
-        : data.product.quantity;
+      // data.quantity < data.product.quantity
+      //   ? data.quantity++
+      //   : data.product.quantity;
+      data.quantity++;
     } else {
-      data.quantity < 2 ? 1 : data.quantity--;
+      // data.quantity < 2 ? 1 : data.quantity--;
+      data.quantity--;
     }
     this.calculateTotal(this.cart);
     localStorage.setItem('cart', JSON.stringify(this.cart));
-    this.cartData$.next({ ...this.cart });
+    this.cartData$.next(this.cart);
   }
 
   deleteFromCart(index: number): void {
@@ -139,7 +143,7 @@ export class CartService {
         this.cart.data.splice(index, 1);
         this.calculateTotal(this.cart);
         localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.cartData$.next({ ...this.cart });
+        this.cartData$.next(this.cart);
       } else {
         this.resetLocalStorage();
       }
@@ -154,7 +158,11 @@ export class CartService {
     let subTotal = 0;
 
     let d = this.cart.data[index];
-    subTotal = d.product.price * d.quantity;
+    if (d.product.onSale) {
+      subTotal = d.product.salePrice * d.quantity;
+    } else {
+      subTotal = d.product.price * d.quantity;
+    }
 
     return subTotal;
   }
@@ -163,8 +171,13 @@ export class CartService {
     let total = 0;
 
     _.forEach(cart.data, (p) => {
-      total += p.quantity * p.product.price;
+      if (p.product.onSale) {
+        total += p.quantity * p.product.salePrice;
+      } else {
+        total += p.quantity * p.product.price;
+      }
     });
+
     cart.total = total;
   }
 
@@ -179,6 +192,6 @@ export class CartService {
       total: 0,
     };
     localStorage.setItem('cart', JSON.stringify(this.cart));
-    this.cartData$.next({ ...this.cart });
+    this.cartData$.next(this.cart);
   }
 }
